@@ -1,0 +1,72 @@
+{
+  "total_tested": 8,
+  "still_detected": 5,
+  "evaded": 3,
+  "summary": "5/8 attacks still detected after perturbation",
+  "per_flow": [
+    {
+      "flow_index": 0,
+      "baseline_action": "Block",
+      "baseline_risk": 99.69,
+      "perturbed_action": "Block",
+      "perturbed_risk": 99.68,
+      "still_caught": true
+    },
+    {
+      "flow_index": 1,
+      "baseline_action": "Block",
+      "baseline_risk": 99.69,
+      "perturbed_action": "Block",
+      "perturbed_risk": 99.69,
+      "still_caught": true
+    },
+    {
+      "flow_index": 2,
+      "baseline_action": "Block",
+      "baseline_risk": 99.67,
+      "perturbed_action": "Block",
+      "perturbed_risk": 99.67,
+      "still_caught": true
+    },
+    {
+      "flow_index": 3,
+      "baseline_action": "Block",
+      "baseline_risk": 99.64,
+      "perturbed_action": "Block",
+      "perturbed_risk": 99.64,
+      "still_caught": true
+    },
+    {
+      "flow_index": 4,
+      "baseline_action": "Block",
+      "baseline_risk": 99.75,
+      "perturbed_action": "Block",
+      "perturbed_risk": 99.7,
+      "still_caught": true
+    },
+    {
+      "flow_index": 5,
+      "baseline_action": "Block",
+      "baseline_risk": 99.67,
+      "perturbed_action": "Rate-limit",
+      "perturbed_risk": 0.66,
+      "still_caught": false
+    },
+    {
+      "flow_index": 6,
+      "baseline_action": "Block",
+      "baseline_risk": 99.36,
+      "perturbed_action": "Rate-limit",
+      "perturbed_risk": 0.16,
+      "still_caught": false
+    },
+    {
+      "flow_index": 7,
+      "baseline_action": "Block",
+      "baseline_risk": 99.66,
+      "perturbed_action": "Rate-limit",
+      "perturbed_risk": 0.38,
+      "still_caught": false
+    }
+  ]
+}
