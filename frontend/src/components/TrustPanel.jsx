@@ -106,14 +106,14 @@ export default function TrustPanel({ flow, sendFlow }) {
   return (
     <div className="panel panel-stage-3">
       <div className="panel-header">
-        <span className="panel-title">🛡 Zero Trust Score</span>
+        <span className="panel-title">Zero Trust Score</span>
         <span className="panel-badge" style={{ color: trustColor(trustBand) }}>{trustBand}</span>
       </div>
       <div className="panel-body">
         <div className="trust-panel-inner">
 
           <div className="trust-hero">
-            <div className="trust-number-wrap" style={{ color: trustColor(trustBand) }}>
+            <div className="trust-number-wrap" style={{ color: 'var(--text-primary)' }}>
               <AnimatedScoreRoll value={trustScore} isRippling={ripple} />
             </div>
             <div className="trust-band-label">/ 100 &nbsp;·&nbsp; {trustBand} trust</div>

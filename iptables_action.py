@@ -1,53 +1,39 @@
 import subprocess
 
-def block_ip(ip_address: str):
-    """
-    Adds a real iptables DROP rule for the given IP.
-    Requires the process to have sudo/root privileges on Linux (WSL2 Ubuntu).
-    """
+RULE_PREFIX = "TrustFlowNGFW_Block_"
+
+def block_ip(ip: str) -> bool:
+    rule_name = f"{RULE_PREFIX}{ip}"
     try:
-        result = subprocess.run(
-            ["sudo", "iptables", "-A", "INPUT", "-s", ip_address, "-j", "DROP"],
-            capture_output=True, text=True, timeout=5
+        subprocess.run(
+            ["netsh", "advfirewall", "firewall", "add", "rule",
+             f"name={rule_name}", "dir=in", "action=block", f"remoteip={ip}"],
+            check=True, capture_output=True, text=True, timeout=5,
         )
-        if result.returncode == 0:
-            print(f"[iptables] Blocked {ip_address}")
-            return True
-        else:
-            print(f"[iptables] Failed to block {ip_address}: {result.stderr}")
-            return False
+        print(f"[Firewall] Blocked {ip} (rule: {rule_name})")
+        return True
     except Exception as e:
-        print(f"[iptables] Exception: {e}")
+        print(f"[Firewall] Could not add rule for {ip} ({e}) - likely needs admin rights.")
         return False
 
-
-def unblock_ip(ip_address: str):
-    """
-    Removes the DROP rule for the given IP (for demo reset/cleanup).
-    """
+def unblock_ip(ip: str) -> bool:
     try:
-        result = subprocess.run(
-            ["sudo", "iptables", "-D", "INPUT", "-s", ip_address, "-j", "DROP"],
-            capture_output=True, text=True, timeout=5
+        subprocess.run(
+            ["netsh", "advfirewall", "firewall", "delete", "rule", f"name={RULE_PREFIX}{ip}"],
+            check=True, capture_output=True, text=True, timeout=5,
         )
-        if result.returncode == 0:
-            print(f"[iptables] Unblocked {ip_address}")
-            return True
-        else:
-            print(f"[iptables] Failed to unblock {ip_address}: {result.stderr}")
-            return False
+        return True
     except Exception as e:
-        print(f"[iptables] Exception: {e}")
+        print(f"[Firewall] Could not remove rule for {ip}: {e}")
         return False
 
-
-def list_rules():
-    """
-    Returns current iptables rules as text — call this before/after
-    a block action to show the live diff to the judge.
-    """
-    result = subprocess.run(
-        ["sudo", "iptables", "-L", "-n", "--line-numbers"],
-        capture_output=True, text=True, timeout=5
-    )
-    return result.stdout
+def list_rules() -> str:
+    try:
+        result = subprocess.run(
+            ["netsh", "advfirewall", "firewall", "show", "rule", "name=all"],
+            capture_output=True, text=True, timeout=5,
+        )
+        lines = [l for l in result.stdout.splitlines() if RULE_PREFIX in l]
+        return "\n".join(lines) if lines else "(no TrustFlow rules active)"
+    except Exception as e:
+        return f"(could not list rules: {e})"

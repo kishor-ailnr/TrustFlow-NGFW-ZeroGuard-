@@ -1,6 +1,6 @@
 # 🛡️ TrustFlow NGFW (Next-Generation AI Firewall)
 
-> **Zero-Trust Network Architecture powered by a Multi-Model AI Ensemble (XGBoost + Isolation Forest + JA3 TLS Fingerprinting), SHAP Explainability, and Automated Active Defense (iptables, Cowrie Honeypot, & Telegram Alerts).**
+> **Zero-Trust Network Architecture powered by a Multi-Model AI Ensemble (XGBoost + Isolation Forest + JA3 TLS Fingerprinting), Agentic SOC Review (Ollama LLM), SHAP Explainability, and Automated Active Defense (Windows Firewall netsh rules, Cowrie Honeypot, & Telegram Alerts).**
 
 ---
 
@@ -26,141 +26,144 @@
                                           ▼
                              [ 2D Decision Matrix Engine ]
                                           │
+                                          ▼
+                             [ Agentic SOC Review (Ollama) ]
+                               (Borderline / Zero-Trust Rules)
+                                          │
          ┌──────────────────┬─────────────┴────────────┬──────────────────┐
          ▼                  ▼                          ▼                  ▼
     ✅ ALLOW           🟡 RATE-LIMIT             🔒 QUARANTINE        🚫 BLOCK
-  (Normal Pass)     (Bandwidth Throttle)     • Redirect to Cowrie    • Real iptables
-                                               SSH Honeypot (p:2222)   DROP rule
+  (Normal Pass)     (Bandwidth Throttle)     • Redirect to Cowrie    • Windows Firewall
+                                               SSH Honeypot (p:2222)   (netsh advfirewall)
                                              • Simulated VLAN Tag    • Telegram Alert
 ```
 
 ---
 
-## 📋 Prerequisites
-* **Python 3.10+** (check: `python --version` or `python3 --version`)
-* **Node.js 18+ & npm** (check: `node --version` and `npm --version`)
+## 📋 Prerequisites (Windows)
+* **Windows 10 / 11** with PowerShell
+* **Python 3.10+** (verify with `python --version`)
+* **Node.js 18+ & npm** (verify with `node --version` and `npm --version`)
+* **Docker Desktop** (for Cowrie honeypot container on port 2222)
+* **Ollama** running locally with `llama3.2` model (`ollama run llama3.2`)
 
 ---
 
-## 🚀 Complete Step-by-Step Setup & Run Guide
+## 🚀 Step-by-Step Setup & Run Guide (Windows)
 
-Follow these steps in order from top to bottom.
+Follow these steps in order to start and run the entire platform.
 
 ---
 
-### Step 1 — Setup Python Virtual Environment & Dependencies
+### Step 1 — Open Elevated Terminal (Admin Rights)
 
-Open your terminal in the `TrustFlowNGFW` project root directory and run:
+For real Windows Firewall rule enforcement, the backend should run with Administrator privileges:
 
-**On Windows (PowerShell / CMD):**
+1. Double-click `launch_admin.bat` in the project root to open an elevated PowerShell window inside the project directory.
+2. (Or open PowerShell as Administrator and run: `cd C:\Music\TrustFlowNGFW`).
+
+---
+
+### Step 2 — Environment Setup & Health Checks
+
+In your elevated PowerShell terminal:
+
 ```powershell
-python -m venv venv
+# 1. Enable script execution (if needed)
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+
+# 2. Activate virtual environment
 .\venv\Scripts\Activate.ps1
-pip install fastapi uvicorn websockets pydantic pandas numpy scikit-learn xgboost joblib httpx shap
-```
-*(If you see an execution policy error on PowerShell, run: `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass`)*
 
-**On Linux / Ubuntu / macOS:**
-```bash
-python3 -m venv venv
-source venv/bin/activate
-pip install fastapi uvicorn websockets pydantic pandas numpy scikit-learn xgboost joblib httpx shap
+# 3. (Optional) Stop extra heavy containers to free CPU/RAM for Ollama & inference
+.\stop_extra_containers.ps1
+
+# 4. Verify Cowrie honeypot status (should report OK on port 2222)
+.\check_cowrie.ps1
 ```
 
 ---
 
-### Step 2 — Verify ML Model Artifacts (OPTIONAL)
+### Step 3 — Start the FastAPI Backend (Terminal 1)
 
-Pre-trained model artifacts are stored in `models/`:
-* `xgb_model.pkl` — Supervised XGBoost multi-class attack classifier (Model A)
-* `iso_forest.pkl` — Isolation Forest zero-day anomaly detector (Model B)
-* `meta_model.pkl` — Meta-Learner fusing all scores into `fused_risk_score`
-* `feature_cols.pkl` — 52 network traffic flow features
-* `label_encoder.pkl` — Attack type encoder
+In your elevated PowerShell terminal (Terminal 1), run:
 
-*(Optional: If you ever want to re-train the models from scratch, run: `python backend/train_ensemble.py`)*
-
----
-
-### Step 3 — Start the Backend Server (Terminal 1)
-
-Open **Terminal 1** in the project root and run:
-
-**On Windows:**
 ```powershell
 .\venv\Scripts\python.exe -m uvicorn backend.main:app --host 127.0.0.1 --port 8000 --reload
 ```
 
-**On Linux / Ubuntu / macOS:**
-```bash
-source venv/bin/activate
-python3 -m uvicorn backend.main:app --host 127.0.0.1 --port 8000 --reload
-```
-
-* **Backend Swagger Docs:** [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
-* **WebSocket Endpoint:** `ws://127.0.0.1:8000/ws`
+* **Backend Swagger API Docs:** [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+* **WebSocket Stream Endpoint:** `ws://127.0.0.1:8000/ws`
 
 ---
 
 ### Step 4 — Start the Frontend Dashboard (Terminal 2)
 
-Open a **new Terminal 2** and run:
+Open a **new PowerShell Terminal 2** and run:
 
-```bash
-cd frontend
+```powershell
+cd C:\Music\TrustFlowNGFW\frontend
 npm install
 npm run dev
 ```
 
-* **Open the Dashboard in your browser:** **[http://localhost:5173/](http://localhost:5173/)**
-* The top bar status will show **`● WS Connected`** in green.
+* **Open the Dashboard in your Browser:** 👉 **[http://localhost:5173/](http://localhost:5173/)**
+* Check the status indicator in the top-right header: it should show **`● WS Connected`** in green.
 
 ---
 
 ### Step 5 — Start Live Traffic Streamer (Terminal 3)
 
-Open a **new Terminal 3** in the project root and run:
+Open a **new PowerShell Terminal 3** in the project root and run:
 
-**On Windows:**
 ```powershell
+cd C:\Music\TrustFlowNGFW
 .\venv\Scripts\python.exe demo_live_stream.py
 ```
 
-**On Linux / Ubuntu / macOS:**
-```bash
-python3 demo_live_stream.py
-```
-
-As soon as this script runs, network flows will start **streaming live into your browser dashboard in real time**!
+As soon as this script runs, network flows will immediately start streaming live into your browser dashboard in real time!
 
 ---
 
-## 🏆 What to Show the Judges During the Demo
+## 🏆 Judge Presentation & Live Demonstration Walkthrough
 
-Follow this 5-point presentation flow on your dashboard:
+When presenting to judges, open **[http://localhost:5173/](http://localhost:5173/)** in your browser and use the **Sidebar Console** to navigate across the 4 key views:
 
-1. **⚡ Live Flow Feed (Left Panel):**
-   * Show traffic classified in real time into **Allow**, **Rate-limit**, **Quarantine**, and **Block**.
-2. **🧠 Signature Circular Risk Gauge & Ensemble Breakdown:**
-   * Click any row to show how the **XGBoost (Supervised)**, **Isolation Forest (Anomaly)**, and **JA3 (TLS Intel)** sub-models score the flow simultaneously.
-3. **🔍 SHAP Explainability:**
-   * Point to the **Top SHAP features** box showing the exact packet metrics (e.g., packet length, flow packets/s) that triggered the AI decision.
-4. **🛡️ Zero-Trust Interactive Toggles (Live What-If Simulation):**
-   * Flip the **MFA** or **Device Health** switches in the Trust Panel, then click **`↺ Re-send with new trust signals`**.
-   * Show the judges how changing trust signals alters the firewall's decision in real-time.
-5. **⚔️ Automated Mitigations:**
-   * Point out the **iptables DROP rule applied** status on Block flows, the **Cowrie SSH Honeypot (port 2222)** redirection with VLAN badges on Quarantine flows, and the **Telegram SOC notification** note.
+### 1. ⚡ Live SOC Dashboard (`/`)
+* **Live Network Flow Feed:** Real-time stream of incoming network flows dynamically categorized into **Allow**, **Rate-limit**, **Quarantine**, and **Block**.
+* **Circular Risk Gauge & Ensemble Breakdown:** Sub-model scoring across **XGBoost** (Known Attacks), **Isolation Forest** (Zero-Day Anomaly), and **JA3 TLS Threat Intel**, fused by the Meta-Learner.
+* **TreeSHAP Explainability:** Transparent packet feature attribution.
+* **Continuous Zero-Trust "What-If" Simulation:** Toggle MFA, Device Health, or Known Location and click **`↺ Re-send with new trust signals`** to watch the firewall decision adapt in real time.
+* **Active Defense Status:** Real Windows Firewall kernel blocks, Cowrie SSH Honeypot (port 2222) redirection, and Telegram alerts.
+
+### 2. 🎯 Adversarial Tests (Red-Team Arena)
+* Navigate to the **Adversarial Tests** tab in the sidebar.
+* Showcase model resilience against adversarial perturbation vectors (FGSM gradient shifts, timing jitter noise, and payload padding).
+* Point out the live adversarial flow table and the **90%+ Robustness Defense Score**.
+
+### 3. 📜 Incident Audit Trail (`Incidents`)
+* Open the **Incident Audit Trail** tab in the sidebar.
+* Show the immutable log of autonomous **Llama-3.2 SOC Agent** decisions, tool calls (`confirm_action`, `escalate_action`, `deescalate_action`), and zero-trust floor guardrail overrides.
+* Inspect quarantined host switch-port isolation states (simulated VLANs).
+
+### 4. 📄 Reports & PDF Compliance Export (`Reports`)
+* Open the **Reports & Export** tab in the sidebar.
+* Demonstrate the **Daily & Monthly Report Generator**: select any target audit date or month.
+* View the live executive summary, risk distribution charts, and MITRE threat breakdowns.
+* Click **`Download Certified PDF Report`** to generate a formal, print-ready PDF audit document for regulatory compliance.
 
 ---
 
-## 🧪 Quick Test Commands (Run in Terminal 3 on Demand)
+## 🧪 Quick Test & Validation Scripts
 
-| Goal | Command | Expected Result |
+Run any of these in PowerShell to demonstrate specific subsystem capabilities on demand:
+
+| Goal | Command | What It Proves |
 |---|---|---|
-| **Test Quarantine Flow** | `python test_quarantine_confirmed.py` | Risk: 88.8, Trust: 60 → **Quarantine** (Redirected to Cowrie) |
-| **Test High-Risk Attack** | `python test_high_risk_flow.py` | Risk: 100.0 → **Block** (iptables DROP rule applied) |
-| **Run Federated Demo** | `python backend/federated/run_federated_demo.py` | Simulates multi-bank federated model aggregation |
-| **Run Red-Team Evasion**| `python backend/redteam/run_redteam_test.py` | Tests adversarial traffic perturbations |
+| **Full Pipeline Test** | `.\venv\Scripts\python.exe -m backend.test_pipeline` | Exercises Allow, Low-Trust Agent override, Quarantine honeypot routing, and Block firewall enforcement. |
+| **Check Honeypot** | `.\check_cowrie.ps1` | Validates Cowrie SSH honeypot listener on port 2222. |
+| **Stop Extra Docker Load** | `.\stop_extra_containers.ps1` | Stops non-essential containers to free RAM/CPU for Ollama inference. |
+| **Red-Team Evasion Test** | `.\venv\Scripts\python.exe backend/redteam/run_redteam_test.py` | Tests model robustness against adversarial network flow perturbations. |
 
 ---
 
@@ -170,60 +173,63 @@ Follow this 5-point presentation flow on your dashboard:
 TrustFlowNGFW/
 ├── backend/                        # FastAPI Backend & AI Pipeline
 │   ├── main.py                     # WebSocket /ws endpoint + REST APIs + CORS
-│   ├── pipeline.py                 # Core AI inference pipeline orchestration
+│   ├── pipeline.py                 # Core AI inference & mitigation pipeline
 │   ├── decision_engine.py          # 2D Trust-Risk Decision Matrix
 │   ├── trust_engine.py             # Zero-Trust Posture Score Calculator
+│   ├── soc_agent.py                # Ollama autonomous SOC decision agent & guardrails
 │   ├── explain.py                  # TreeSHAP explainability engine
-│   ├── train_ensemble.py           # Model training script
+│   ├── test_pipeline.py            # End-to-end multi-case pipeline test suite
 │   ├── federated/                  # Federated Learning client/server scripts
 │   └── redteam/                    # Adversarial perturbation & evasion scripts
 ├── frontend/                       # Vite + React SOC Dashboard
 │   ├── src/
-│   │   ├── App.jsx                 # Main layout & state wiring
-│   │   ├── index.css               # Frosted white glassmorphism design system
-│   │   ├── hooks/                  # useWebSocket & usePolling hooks
+│   │   ├── App.jsx                 # Main dashboard layout & state management
+│   │   ├── index.css               # Frosted glassmorphism design system
+│   │   ├── hooks/                  # useWebSocket & polling hooks
 │   │   └── components/
-│   │       ├── FlowFeed.jsx        # Live scrolling flow list
-│   │       ├── EnsemblePanel.jsx   # Model A/B/C breakdown
-│   │       ├── RiskGauge.jsx       # Signature SVG circular ring gauge
-│   │       ├── TrustPanel.jsx      # Neumorphic posture toggles + re-send
-│   │       ├── MitigationPanel.jsx # iptables, Cowrie honeypot & Telegram status
-│   │       ├── FederatedPanel.jsx  # Recharts federated accuracy curve
-│   │       └── RedTeamPanel.jsx    # Adversarial robustness table
-├── data/                           # Evaluation & holdout datasets
-│   └── replay_holdout.csv          # 45,000 holdout flows (CICIDS2017)
-├── models/                         # Pre-trained ML weights (.pkl artifacts)
-├── demo_live_stream.py             # Continuous live traffic streaming demo script
-├── test_quarantine_confirmed.py    # Deterministic Quarantine verification test
-├── test_high_risk_flow.py          # High-Risk Block verification test
-└── README.md                       # Complete project documentation
+│   │       ├── FlowFeed.jsx        # Live scrolling flow telemetry feed
+│   │       ├── EnsemblePanel.jsx   # Model A/B/C breakdown & explainability
+│   │       ├── RiskGauge.jsx       # Circular SVG risk score gauge
+│   │       ├── TrustPanel.jsx      # Zero-trust posture toggles + what-if simulation
+│   │       ├── MitigationPanel.jsx # Windows Firewall, Cowrie & Telegram status
+│   │       ├── FederatedPanel.jsx  # Federated learning convergence chart
+│   │       └── RedTeamPanel.jsx    # Adversarial robustness stress-testing
+├── data/                           # Replay and evaluation datasets
+├── models/                         # Trained ML weights (.pkl artifacts)
+├── iptables_action.py              # Windows Firewall netsh advfirewall rule manager
+├── honeypot_redirect.py            # Cowrie SSH honeypot dispatcher
+├── telegram_alert.py               # Telegram SOC alerting service
+├── demo_live_stream.py             # Live traffic streaming demo script
+├── launch_admin.bat                # Single-click elevated terminal launcher
+├── stop_extra_containers.ps1       # Docker cleanup helper script
+├── check_cowrie.ps1                # Standalone Honeypot port 2222 reachability check
+└── README.md                       # Project documentation
 ```
 
 ---
 
-## 🛠️ Troubleshooting & FAQs
+## 🛠️ Windows Troubleshooting & FAQs
 
 ### 1. `WS Disconnected` in Dashboard Top Bar
-* **Cause:** The backend server is not running.
-* **Fix:** In Terminal 1, run `python -m uvicorn backend.main:app --host 127.0.0.1 --port 8000`.
+* **Cause:** The backend server is not running on port 8000.
+* **Fix:** In Terminal 1, run:
+  ```powershell
+  .\venv\Scripts\python.exe -m uvicorn backend.main:app --host 127.0.0.1 --port 8000 --reload
+  ```
 
-### 2. PowerShell Script Execution Policy Error (Windows)
+### 2. PowerShell Script Execution Policy Error
 * **Error:** `cannot be loaded because running scripts is disabled on this system.`
-* **Fix:** Run this once in PowerShell:
+* **Fix:** Run this command once in PowerShell:
   ```powershell
   Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
   ```
 
 ### 3. Port 8000 or 5173 Already in Use
-* **Fix (Windows):**
+* **Fix:** Kill lingering Python or Node processes:
   ```powershell
   Get-Process python, node -ErrorAction SilentlyContinue | Stop-Process
-  ```
-* **Fix (Linux/macOS):**
-  ```bash
-  kill -9 $(lsof -t -i:8000 -i:5173)
   ```
 
 ---
 
-*TrustFlow NGFW — Next-Generation AI Defense Architecture.*
+*TrustFlow NGFW — Next-Generation Zero-Trust AI Defense Architecture.*

@@ -34,13 +34,12 @@ export default function FlowFeed({ flows, selectedFlowId, onSelect, onOpenDetail
   return (
     <div className="panel span-row panel-stage-1">
       <div className="panel-header">
-        <span className="panel-title">⚡ Live Flow Feed</span>
+        <span className="panel-title">Live Flow Feed</span>
         <span className="panel-badge">{flows.length} flows</span>
       </div>
       <div className="panel-body">
         {flows.length === 0 ? (
           <div className="empty-state">
-            <div className="empty-icon">📡</div>
             <div>Waiting for flows on WebSocket…</div>
             <div style={{ fontSize: 11, opacity: 0.6 }}>Send a payload to ws://127.0.0.1:8000/ws</div>
           </div>

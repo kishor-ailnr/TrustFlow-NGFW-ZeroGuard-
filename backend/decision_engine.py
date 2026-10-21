@@ -1,6 +1,5 @@
 # backend/decision_engine.py
 import datetime
-from iptables_action import block_ip, list_rules
 from honeypot_redirect import trigger_honeypot_connection
 # In-memory VLAN quarantine state (simulated — no managed switch available)
 vlan_quarantine_state = {}  # flow_id -> {"vlan_status": "QUARANTINED", "timestamp": ...}
@@ -50,14 +49,6 @@ def decide_action(trust_score: float, risk_score: float, source_ip: str = "192.0
         f"Trust={t_band} ({trust_score:.0f}) + Risk={r_band} ({risk_score:.0f}) -> {action}"
     )
 
-    if action == "Block":
-        before = list_rules()
-        block_ip(source_ip)
-        after = list_rules()
-
-        print("BEFORE:\n", before)
-        print("AFTER:\n", after)
-
     return {
         "action": action,
         "trust_band": t_band,
@@ -73,8 +64,6 @@ if __name__ == "__main__":
     )
 
     print(result)
-
-    
 
 def simulate_vlan_quarantine(flow_id: str, source_ip: str):
     """

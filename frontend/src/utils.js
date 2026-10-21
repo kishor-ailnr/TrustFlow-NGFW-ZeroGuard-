@@ -8,9 +8,9 @@ export function riskClass(score) {
 }
 
 export function trustColor(band) {
-  if (band === 'High')   return 'var(--gold)'
-  if (band === 'Medium') return 'var(--amber)'
-  return 'var(--block)'
+  if (band === 'High')   return 'var(--allow-text)'
+  if (band === 'Medium') return 'var(--ratelimit-text)'
+  return 'var(--block-text)'
 }
 
 export function pct(val) {

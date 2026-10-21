@@ -15,8 +15,10 @@ if ROOT_DIR not in sys.path:
 
 from backend.trust_engine import compute_trust_score
 from backend.decision_engine import decide_action, simulate_vlan_quarantine
+from backend.soc_agent import run_soc_agent
+from iptables_action import block_ip
 from telegram_alert import send_telegram_alert_async
-from honeypot_redirect import trigger_honeypot_connection
+from honeypot_redirect import trigger_honeypot_connection, watch_honeypot_and_judge
 
 # Load models and preprocessing artifacts
 MODELS_DIR = os.path.join(ROOT_DIR, "models")
@@ -71,138 +73,113 @@ async def trigger_honeypot_connection_async(
     )
 
 async def process_flow(flow_data: dict) -> dict:
-    """
-    Orchestration function for processing a single incoming network flow:
-    a. Runs ensemble scoring (XGBoost, Isolation Forest, JA3 check, Meta-learner)
-    b. Computes SHAP feature and sub-model attribution
-    c. Computes trust score from posture signals
-    d. Decides action via decision engine matrix
-    e. Dispatches async quarantine / alerting tasks if required
-    f. Returns combined structured result
-    """
     flow_id = str(flow_data.get("flow_id", "UNKNOWN"))
     source_ip = str(flow_data.get("source_ip", "192.0.2.100"))
 
-    # 1. Prepare feature vector for ML models
     row_dict = {col: float(flow_data.get(col, 0.0)) for col in feature_cols}
     df_row = pd.DataFrame([row_dict])[feature_cols]
 
-    # --- a. Ensemble Scoring Pipeline ---
-    # Model A: XGBoost supervised risk score (0.0 - 1.0)
     proba = xgb_model.predict_proba(df_row)
     xgb_risk = float(1.0 - proba[0, normal_class_idx])
-    model_a_score = xgb_risk
-
-    # Model B: Isolation Forest unsupervised anomaly risk score (0.0 - 1.0)
     raw_iso_score = float(-iso_forest.score_samples(df_row)[0])
     iso_risk = (raw_iso_score - iso_min) / (iso_max - iso_min) if (iso_max - iso_min) > 0 else 0.0
     iso_risk = float(np.clip(iso_risk, 0.0, 1.0))
-    model_b_score = iso_risk
+    ja3_risk = float(flow_data.get("ja3_risk", 0.0))
+    ja3_flagged = ja3_risk >= 1.0
 
-    # Model C: JA3 TLS intelligence risk score (0.0 - 1.0)
-    # Check ja3_risk field or ja3_hash
-    if "ja3_risk" in flow_data:
-        ja3_risk = float(flow_data["ja3_risk"])
-    else:
-        ja3_risk = 0.0
-    model_c_score = ja3_risk
-
-    # Meta-learner fusion: Final fused risk score (0.0 - 100.0)
     meta_X = pd.DataFrame([[xgb_risk, iso_risk, ja3_risk]], columns=["xgb_risk", "iso_risk", "ja3_risk"])
     fused_risk_score = float(meta_model.predict_proba(meta_X)[0, 1] * 100.0)
 
-    # --- b. SHAP & Sub-Model Explainability ---
-    # SHAP values for XGBoost
     shap_raw = np.array(explainer.shap_values(df_row))
-    if len(shap_raw.shape) == 3:  # (samples, features, classes)
+    if len(shap_raw.shape) == 3:
         row_shap = shap_raw[0, :, proba[0].argmax()]
-    elif len(shap_raw.shape) == 2:  # (samples, features)
+    elif len(shap_raw.shape) == 2:
         row_shap = shap_raw[0, :]
     else:
         row_shap = shap_raw.flatten()
-
     top2_idx = np.argsort(-np.abs(row_shap))[:2]
     top_shap_features = ", ".join(feature_names[top2_idx])
 
-    # Sub-model attribution based on meta-learner weighted contributions
     contributions = np.array([xgb_risk, iso_risk, ja3_risk]) * meta_coefs
     primary_idx = int(np.argmax(contributions))
     primary_model = submodel_names[primary_idx]
-
     shap_attribution = {
         "primary_model": primary_model,
         "top_features": top_shap_features,
         "contributions": {
             "model_a_xgboost": float(contributions[0]),
             "model_b_isolation_forest": float(contributions[1]),
-            "model_c_ja3": float(contributions[2])
-        }
+            "model_c_ja3": float(contributions[2]),
+        },
     }
 
-    # Human-readable explanation text
-    if fused_risk_score < 40:
-        explanation = f"Allowed: consistent with normal traffic patterns (risk score {fused_risk_score:.0f}/100)"
-    elif primary_model == "TLS/JA3 intel" and ja3_risk == 1.0:
-        explanation = f"Flagged: TLS client fingerprint matches known malicious JA3 signature"
-    elif primary_model == "Anomaly detector":
-        explanation = f"Flagged: flow deviates from normal traffic baseline (unsupervised anomaly signal)"
-    else:
-        explanation = f"Flagged: classifier identified anomalous pattern in {top_shap_features}"
-
-    # --- c. Trust Score Computation ---
-    mfa_on = bool(flow_data.get("mfa_on", True))
-    device_healthy = bool(flow_data.get("device_healthy", True))
-    known_location = bool(flow_data.get("known_location", True))
-    normal_hours = bool(flow_data.get("normal_hours", True))
-
     trust_result = compute_trust_score(
-        mfa_on=mfa_on,
-        device_healthy=device_healthy,
-        known_location=known_location,
-        normal_hours=normal_hours
+        mfa_on=bool(flow_data.get("mfa_on", True)),
+        device_healthy=bool(flow_data.get("device_healthy", True)),
+        known_location=bool(flow_data.get("known_location", True)),
+        normal_hours=bool(flow_data.get("normal_hours", True)),
     )
     trust_score = float(trust_result["trust_score"])
     trust_band = trust_result.get("trust_level", "High")
 
-    # --- d. Decision Engine Action ---
-    decision = decide_action(trust_score=trust_score, risk_score=fused_risk_score, source_ip=source_ip)
+    decision = decide_action(trust_score=trust_score, risk_score=fused_risk_score)
     action = decision["action"]
     reason = decision["reason"]
+    agent_result = None
 
-    # --- e. Quarantine Handling ---
-    if action == "Quarantine":
-        asyncio.create_task(
-            trigger_honeypot_connection_async(flow_id, source_ip=source_ip)
+    if action in ("Rate-limit", "Quarantine"):
+        agent_result = run_soc_agent(
+            flow_id=flow_id, trust_score=trust_score, risk_score=fused_risk_score,
+            suggested_action=action,
+            explanation=f"Primary signal: {primary_model} ({top_shap_features})",
+            ja3_flagged=ja3_flagged,
         )
+        if agent_result.get("overridden"):
+            action = agent_result["final_action"]
+            reason = f"{reason} | Agent override: {agent_result['agent_reason']}"
+
+    if action == "Allow":
+        explanation = f"Allowed: consistent with normal traffic patterns (risk score {fused_risk_score:.0f}/100)"
+    elif action == "Block":
+        if ja3_flagged:
+            explanation = "Blocked: TLS client fingerprint matches a known-malicious JA3 signature"
+        elif primary_model == "Anomaly detector":
+            explanation = "Blocked: flow deviates sharply from the normal traffic baseline"
+        else:
+            explanation = f"Blocked: classifier identified a high-confidence attack pattern in {top_shap_features}"
+    else:
+        explanation = f"{action}: classifier flagged unusual {top_shap_features}"
+
+    honeypot_verdict = None
+    if action == "Quarantine":
+        asyncio.create_task(trigger_honeypot_connection_async(flow_id, source_ip=source_ip))
         simulate_vlan_quarantine(flow_id, source_ip)
+        try:
+            honeypot_verdict = watch_honeypot_and_judge(flow_id, source_ip=source_ip, timeout_seconds=4)
+            if honeypot_verdict and honeypot_verdict.get("final_verdict") in ("Block", "Allow"):
+                action = honeypot_verdict["final_verdict"]
+                reason = f"{reason} | {honeypot_verdict['reason']}"
+        except Exception as e:
+            print(f"[pipeline] watch_honeypot_and_judge note: {e}")
 
-    # --- f. Block Handling ---
-    # Note: decide_action() already handles block_ip(source_ip) internally.
+    if action == "Block":
+        try:
+            block_ip(source_ip)
+        except Exception as e:
+            print(f"[pipeline] block_ip failed for {source_ip}: {e}")
 
-    # --- g. Telegram Alerting ---
     if action in ("Block", "Quarantine"):
         asyncio.create_task(
-            send_telegram_alert_async(
-                flow_id=flow_id,
-                action=action.upper(),
-                risk_score=fused_risk_score,
-                trust_score=trust_score,
-                reason=reason
-            )
+            send_telegram_alert_async(flow_id=flow_id, action=action.upper(), risk_score=fused_risk_score,
+                                       trust_score=trust_score, reason=reason)
         )
 
-    # --- h. Combined Response ---
     return {
-        "flow_id": flow_id,
-        "source_ip": source_ip,
-        "model_a_score": round(model_a_score, 4),
-        "model_b_score": round(model_b_score, 4),
-        "model_c_score": round(model_c_score, 4),
+        "flow_id": flow_id, "source_ip": source_ip,
+        "model_a_score": round(xgb_risk, 4), "model_b_score": round(iso_risk, 4), "model_c_score": round(ja3_risk, 4),
         "fused_risk_score": round(fused_risk_score, 2),
-        "shap_attribution": shap_attribution,
-        "explanation": explanation,
-        "trust_score": trust_score,
-        "trust_band": trust_band,
-        "action": action,
-        "reason": reason
+        "shap_attribution": shap_attribution, "explanation": explanation,
+        "trust_score": trust_score, "trust_band": trust_band,
+        "action": action, "reason": reason, "agent_review": agent_result,
+        "honeypot_verdict": honeypot_verdict,
     }

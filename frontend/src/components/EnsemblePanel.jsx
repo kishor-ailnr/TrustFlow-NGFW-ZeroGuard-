@@ -38,10 +38,9 @@ export default function EnsemblePanel({ flow, onOpenDetail }) {
     return (
       <div className="panel panel-stage-2">
         <div className="panel-header">
-          <span className="panel-title">🧠 Ensemble Breakdown</span>
+          <span className="panel-title">Ensemble Breakdown</span>
         </div>
         <div className="empty-state" style={{ height: '100%' }}>
-          <div className="empty-icon">🔍</div>
           <div>Click a flow to inspect</div>
         </div>
       </div>
@@ -53,7 +52,7 @@ export default function EnsemblePanel({ flow, onOpenDetail }) {
   return (
     <div className="panel panel-stage-2">
       <div className="panel-header">
-        <span className="panel-title">🧠 Ensemble Breakdown</span>
+        <span className="panel-title">Ensemble Breakdown</span>
         <span className="panel-badge flow-id-badge">{flow.flow_id}</span>
       </div>
       <div className="panel-body">

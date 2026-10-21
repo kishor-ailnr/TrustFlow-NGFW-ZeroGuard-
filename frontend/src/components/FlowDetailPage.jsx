@@ -234,7 +234,6 @@ export default function FlowDetailPage({ flow, vlanData, redTeamData, onBack }) 
           {/* ── Human Understanding AI Diagnosis & Root Cause Card (Stacked Layout) ── */}
           <div className="hero-diagnosis-card">
             <div className="diag-header">
-              <span className="diag-icon">💡</span>
               <span className="diag-title">Executive AI Threat Diagnosis & Root Cause Analysis</span>
             </div>
             
@@ -264,26 +263,26 @@ export default function FlowDetailPage({ flow, vlanData, redTeamData, onBack }) 
             className={`detail-tab-btn ${activeTab === 'ensemble' ? 'active' : ''}`}
             onClick={() => setActiveTab('ensemble')}
           >
-            🧠 Deep Ensemble & SHAP ({((fused_risk_score ?? 0)).toFixed(1)})
+            Deep Ensemble & SHAP ({((fused_risk_score ?? 0)).toFixed(1)})
           </button>
           <button
             className={`detail-tab-btn ${activeTab === 'mitigation' ? 'active' : ''}`}
             onClick={() => setActiveTab('mitigation')}
           >
-            ⚔️ Mitigation & Decoy Shell ({action})
+            Mitigation & Decoy Shell ({action})
           </button>
           <button
             className={`detail-tab-btn ${activeTab === 'features' ? 'active' : ''}`}
             onClick={() => setActiveTab('features')}
           >
-            📊 52-Feature Telemetry Matrix
+            52-Feature Telemetry Matrix
           </button>
           {redTeamRow && (
             <button
               className={`detail-tab-btn ${activeTab === 'adversarial' ? 'active' : ''}`}
               onClick={() => setActiveTab('adversarial')}
             >
-              🎯 Adversarial Test Result
+              Adversarial Test Result
             </button>
           )}
         </div>
@@ -295,7 +294,7 @@ export default function FlowDetailPage({ flow, vlanData, redTeamData, onBack }) 
             {/* Signature Gauge & Sub-models */}
             <div className="panel detail-subpanel">
               <div className="panel-header">
-                <span className="panel-title">🧠 Fused Risk Calibration & Sub-Model Contributions</span>
+                <span className="panel-title">Fused Risk Calibration & Sub-Model Contributions</span>
               </div>
               <div className="panel-body subpanel-body">
                 <div className="ensemble-showcase">
@@ -344,7 +343,7 @@ export default function FlowDetailPage({ flow, vlanData, redTeamData, onBack }) 
             {/* Complete SHAP Explainability & Meta-Learner Weights */}
             <div className="panel detail-subpanel">
               <div className="panel-header">
-                <span className="panel-title">🔬 Meta-Learner Weights & SHAP Attribution</span>
+                <span className="panel-title">Meta-Learner Weights &amp; SHAP Attribution</span>
                 <span className="panel-badge">DRIVER: {shap_attribution?.primary_model ?? 'XGBoost'}</span>
               </div>
               <div className="panel-body subpanel-body">
@@ -409,7 +408,7 @@ export default function FlowDetailPage({ flow, vlanData, redTeamData, onBack }) 
         {activeTab === 'mitigation' && (
           <div className="tab-pane-single panel detail-subpanel">
             <div className="panel-header">
-              <span className="panel-title">⚔️ Policy Enforcement & Decoy Containment History</span>
+              <span className="panel-title">Policy Enforcement &amp; Decoy Containment History</span>
               <span className="panel-badge">{source_ip}</span>
             </div>
             <div className="panel-body subpanel-body">
@@ -418,16 +417,16 @@ export default function FlowDetailPage({ flow, vlanData, redTeamData, onBack }) 
                 {/* Mitigation Policy Overview */}
                 <div className="miti-overview-cards">
                   <div className="miti-card">
-                    <span className="mc-icon">🔒</span>
+                    <span className="mc-icon">[ACTION]</span>
                     <div className="mc-content">
                       <strong>Policy Decision:</strong>
-                      <span style={{ color: actionColors[action] ?? 'var(--gold)', fontWeight: 800 }}> {action}</span>
+                      <span style={{ color: actionColors[action] ?? 'var(--accent)', fontWeight: 800 }}> {action}</span>
                       <p>{reason ?? 'Automated risk-trust arbitration threshold applied.'}</p>
                     </div>
                   </div>
 
                   <div className="miti-card">
-                    <span className="mc-icon">🔥</span>
+                    <span className="mc-icon">[KERNEL]</span>
                     <div className="mc-content">
                       <strong>iptables Kernel Rule:</strong>
                       <span> {action === 'Block' ? `iptables -A INPUT -s ${source_ip} -j DROP` : 'No blocking rule required'}</span>
@@ -436,7 +435,7 @@ export default function FlowDetailPage({ flow, vlanData, redTeamData, onBack }) 
                   </div>
 
                   <div className="miti-card">
-                    <span className="mc-icon">🌐</span>
+                    <span className="mc-icon">[VLAN]</span>
                     <div className="mc-content">
                       <strong>VLAN Sandbox Assignment:</strong>
                       <span> {vlanInfo ? vlanInfo.vlan_status : (action === 'Quarantine' ? 'QUARANTINED_VLAN_99' : 'DEFAULT_VLAN_10')}</span>
@@ -448,7 +447,6 @@ export default function FlowDetailPage({ flow, vlanData, redTeamData, onBack }) 
                 {/* Full Honeypot Terminal */}
                 {action === 'Quarantine' && (
                   <div className="honeypot-terminal-wrapper detail-terminal">
-                    <div className="terminal-scanlines" aria-hidden="true" />
                     <div className="honeypot-header">
                       <div className="honey-dots">
                         <span className="hdot hdot-red"></span>
@@ -456,7 +454,7 @@ export default function FlowDetailPage({ flow, vlanData, redTeamData, onBack }) 
                         <span className="hdot hdot-green"></span>
                       </div>
                       <div className="honey-title">
-                        🍯 Decoy Honeypot Shell — Cowrie Sandbox Terminal ({source_ip}:2222)
+                        Decoy Honeypot Shell — Cowrie Sandbox Terminal ({source_ip}:2222)
                       </div>
                     </div>
                     <div className="honeypot-terminal-body">
@@ -498,8 +496,8 @@ export default function FlowDetailPage({ flow, vlanData, redTeamData, onBack }) 
                         </div>
                       </div>
                       <div className="honey-footer-stats">
-                        <span>⌨️ <strong>48</strong> Keystrokes Logged</span>
-                        <span>📦 <strong>1</strong> Dropper Contained in Quarantine Buffer</span>
+                        <span><strong>48</strong> Keystrokes Logged</span>
+                        <span><strong>1</strong> Dropper Contained in Quarantine Buffer</span>
                         <span className="honey-trapping-live">
                           <span className="trapping-dot" /> Session Live
                         </span>
@@ -517,7 +515,7 @@ export default function FlowDetailPage({ flow, vlanData, redTeamData, onBack }) 
         {activeTab === 'features' && (
           <div className="tab-pane-single panel detail-subpanel">
             <div className="panel-header">
-              <span className="panel-title">📊 Complete 52-Dimension Network Telemetry Matrix</span>
+              <span className="panel-title">Complete 52-Dimension Network Telemetry Matrix</span>
               <span className="panel-badge">{flow_id}</span>
             </div>
             <div className="panel-body subpanel-body">
@@ -553,7 +551,7 @@ export default function FlowDetailPage({ flow, vlanData, redTeamData, onBack }) 
         {activeTab === 'adversarial' && redTeamRow && (
           <div className="tab-pane-single panel detail-subpanel">
             <div className="panel-header">
-              <span className="panel-title">🎯 Adversarial Perturbation Outcome</span>
+              <span className="panel-title">Adversarial Perturbation Outcome</span>
               <span className="panel-badge">{flow_id}</span>
             </div>
             <div className="panel-body subpanel-body">
@@ -571,7 +569,7 @@ export default function FlowDetailPage({ flow, vlanData, redTeamData, onBack }) 
                   <div className="adv-box result-box">
                     <span className="adv-k">Robustness Result</span>
                     <strong className={redTeamRow.perturbed_action !== redTeamRow.baseline_action ? 'evaded' : 'detected'}>
-                      {redTeamRow.perturbed_action !== redTeamRow.baseline_action ? '⚠ Perturbation Evaded' : '✓ Attack Still Detected'}
+                      {redTeamRow.perturbed_action !== redTeamRow.baseline_action ? 'Perturbation Evaded' : 'Attack Detected'}
                     </strong>
                   </div>
                 </div>

@@ -1,5 +1,6 @@
 // src/components/RedTeamPanel.jsx
 // Panel 6 — adversarial / red-team test results
+// Enterprise flat styling, status text colors, no emojis
 
 import { useEffect, useState } from 'react'
 
@@ -30,11 +31,11 @@ function StatCount({ value, duration = 600 }) {
 
 function DetectedBadge() {
   return (
-    <span className="detected-badge-wrap">
+    <span className="detected-badge-wrap" style={{ color: 'var(--allow-text)' }}>
       <svg className="check-svg" width="12" height="12" viewBox="0 0 24 24" fill="none">
         <path
           d="M4 12.5L9.5 18L20 6"
-          stroke="var(--gold, #C9A227)"
+          stroke="var(--allow-text)"
           strokeWidth="3"
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -51,10 +52,9 @@ export default function RedTeamPanel({ data, error, onOpenDetail }) {
     return (
       <div className="panel panel-stage-6">
         <div className="panel-header">
-          <span className="panel-title">🎯 Adversarial Tests</span>
+          <span className="panel-title">Adversarial Tests</span>
         </div>
         <div className="empty-state" style={{ height: '100%' }}>
-          <div className="empty-icon">🎯</div>
           <div>No red-team results yet</div>
           <div style={{ fontSize: 11, opacity: 0.6 }}>Run backend/redteam/ scripts to populate</div>
         </div>
@@ -67,7 +67,7 @@ export default function RedTeamPanel({ data, error, onOpenDetail }) {
   return (
     <div className="panel panel-stage-6">
       <div className="panel-header">
-        <span className="panel-title">🎯 Adversarial Tests</span>
+        <span className="panel-title">Adversarial Tests</span>
         <span className="panel-badge">{total_tested} flows tested</span>
       </div>
       <div className="panel-body">
@@ -76,9 +76,9 @@ export default function RedTeamPanel({ data, error, onOpenDetail }) {
 
         <div className="redteam-stats-grid">
           {[
-            { label: 'Total tested', val: total_tested, color: 'var(--text-platinum)' },
-            { label: 'Still detected', val: still_detected, color: 'var(--gold)' },
-            { label: 'Evaded',         val: evaded,         color: 'var(--block)' },
+            { label: 'Total tested', val: total_tested, color: 'var(--text-primary)' },
+            { label: 'Still detected', val: still_detected, color: 'var(--allow-text)' },
+            { label: 'Evaded',         val: evaded,         color: 'var(--block-text)' },
           ].map(({ label, val, color }) => (
             <div key={label} className="redteam-stat-card">
               <div className="redteam-stat-num" style={{ color }}>
@@ -101,23 +101,33 @@ export default function RedTeamPanel({ data, error, onOpenDetail }) {
                 </tr>
               </thead>
               <tbody>
-                {per_flow.map((row, i) => {
-                  const evadedRow = row.perturbed_action !== row.baseline_action
+                {per_flow.map((row) => {
+                  const isInteractive = Boolean(onOpenDetail)
+                  const evadedRow = row.result === 'evaded' || row.perturbed_action !== row.baseline_action
                   return (
                     <tr
-                      key={i}
-                      className="redteam-row-anim clickable-row"
-                      style={{ animationDelay: `${i * 40}ms` }}
+                      key={row.flow_id}
+                      className={`redteam-row ${evadedRow ? 'row-evaded' : 'row-detected'} ${isInteractive ? 'interactive-row' : ''}`}
                       onClick={() => onOpenDetail && onOpenDetail(row)}
-                      title={onOpenDetail ? `Inspect flow ${row.flow_id}` : undefined}
+                      title={isInteractive ? 'Click to inspect flow' : undefined}
                     >
-                      <td className="cell-flow-id">
-                        {row.flow_id ?? `flow-${i}`}
+                      <td><code>{row.flow_id}</code></td>
+                      <td>
+                        <span className={`action-pill ${row.baseline_action}`}>
+                          {row.baseline_action}
+                        </span>
                       </td>
-                      <td>{row.baseline_action ?? '—'}</td>
-                      <td>{row.perturbed_action ?? '—'}</td>
-                      <td className={evadedRow ? 'evaded' : 'detected'}>
-                        {evadedRow ? '⚠ Evaded' : <DetectedBadge />}
+                      <td>
+                        <span className={`action-pill ${row.perturbed_action}`}>
+                          {row.perturbed_action}
+                        </span>
+                      </td>
+                      <td>
+                        {evadedRow ? (
+                          <span style={{ color: 'var(--block-text)', fontWeight: 600 }}>Evaded</span>
+                        ) : (
+                          <DetectedBadge />
+                        )}
                       </td>
                     </tr>
                   )
@@ -126,8 +136,8 @@ export default function RedTeamPanel({ data, error, onOpenDetail }) {
             </table>
           </div>
         )}
+
       </div>
     </div>
   )
 }
-

@@ -1,0 +1,104 @@
+/* src/tokens.css */
+/* ═══════════════════════════════════════════════════════════════
+   TrustFlow NGFW — Enterprise Tokens (SafeLine / ShieldCore Style)
+   Flat surfaces · Hairline borders · Unified Accent · High Contrast
+   ═══════════════════════════════════════════════════════════════ */
+
+:root,
+[data-theme="light"] {
+  --bg-app: #F4F6F9;
+  --bg-sidebar: #FFFFFF;          /* SafeLine style; sidebar separated by a 1px border */
+  --surface: #FFFFFF;
+  --surface-header: #FFFFFF;      /* card header: same white, separated by a 1px bottom border */
+  --surface-raised: #F8FAFC;      /* inputs, toggle rows, stat tiles */
+  --border: #E3E8EF;
+  --border-strong: #CBD5E1;
+  --text-primary: #111827;
+  --text-secondary: #4B5563;
+  --text-muted: #9CA3AF;
+  --accent: #0F766E;              /* teal, SafeLine/Cybonet feel */
+  --accent-hover: #115E59;
+  --accent-subtle: #E6F4F2;
+  --allow-text: #15803D;      --allow-bg: #DCFCE7;
+  --ratelimit-text: #B45309;  --ratelimit-bg: #FEF3C7;
+  --quarantine-text: #C2410C; --quarantine-bg: #FFEDD5;
+  --block-text: #B91C1C;      --block-bg: #FEE2E2;
+  --info-text: #475569;       --info-bg: #F1F5F9;
+
+  /* Solid button color */
+  --btn-primary-bg: #0F766E;
+  --btn-primary-text: #FFFFFF;
+  --btn-primary-hover: #115E59;
+
+  /* Aliases for backwards compatibility */
+  --gold: var(--accent);
+  --gold-light: var(--accent-hover);
+  --gold-glow: var(--accent-subtle);
+  --amber: var(--ratelimit-text);
+  --amber-glow: var(--ratelimit-bg);
+  --block: var(--block-text);
+  --allow: var(--allow-text);
+  --ratelimit: var(--ratelimit-text);
+  --quarantine: var(--quarantine-text);
+  --text-platinum: var(--text-primary);
+
+  --font-display-serif: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+
+  --radius-panel: 6px;
+  --radius-sm: 4px;
+  --radius-xs: 3px;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --bezel-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="dark"] {
+  --bg-app: #0A0C0B;
+  --bg-sidebar: #0E1110;
+  --surface: #111514;
+  --surface-header: #141918;
+  --surface-raised: #181D1C;
+  --border: #232A28;
+  --border-strong: #323B38;
+  --text-primary: #E6EAE8;
+  --text-secondary: #9AA5A1;
+  --text-muted: #66716D;
+  --accent: #22C55E;              /* muted green; use #16A34A for solid button fills */
+  --accent-hover: #16A34A;
+  --accent-subtle: rgba(34, 197, 94, 0.10);
+  --allow-text: #4ADE80;      --allow-bg: #0F2A1A;
+  --ratelimit-text: #FBBF24;  --ratelimit-bg: #2B2208;
+  --quarantine-text: #FB923C; --quarantine-bg: #301B0C;
+  --block-text: #F87171;      --block-bg: #331416;
+  --info-text: #9AA5A1;       --info-bg: #1A1F1E;
+
+  /* Solid button color */
+  --btn-primary-bg: #16A34A;
+  --btn-primary-text: #FFFFFF;
+  --btn-primary-hover: #15803D;
+
+  /* Aliases for backwards compatibility */
+  --gold: var(--accent);
+  --gold-light: var(--accent-hover);
+  --gold-glow: var(--accent-subtle);
+  --amber: var(--ratelimit-text);
+  --amber-glow: var(--ratelimit-bg);
+  --block: var(--block-text);
+  --allow: var(--allow-text);
+  --ratelimit: var(--ratelimit-text);
+  --quarantine: var(--quarantine-text);
+  --text-platinum: var(--text-primary);
+
+  --font-display-serif: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+
+  --radius-panel: 6px;
+  --radius-sm: 4px;
+  --radius-xs: 3px;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --bezel-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
