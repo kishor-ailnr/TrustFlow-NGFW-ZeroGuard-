@@ -76,7 +76,7 @@ export default function IncidentsPage({ incidentLogs = [], vlanData = {}, onOpen
               {incidentLogs.length > 0 ? (
                 incidentLogs.map((item, idx) => (
                   <tr key={idx} className="adv-row">
-                    <td>{item.timestamp ? item.timestamp.replace('T', ' ').slice(0, 19) : '—'}</td>
+                    <td className="td-mono">{item.timestamp ? item.timestamp.replace('T', ' ').slice(0, 19) : '—'}</td>
                     <td><code>{item.flow_id || 'test-flow'}</code></td>
                     <td>
                       <span className={`action-pill ${item.action ? item.action.toLowerCase() : 'quarantine'}`}>

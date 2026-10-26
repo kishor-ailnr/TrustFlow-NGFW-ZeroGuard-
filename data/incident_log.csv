@@ -624,3 +624,6 @@ timestamp,flow_id,action,reasoning
 2026-10-20T19:47:45.164167,DEMO-PORT_SCANNING-969,Allow,info,Honeypot feedback: Allow - no malicious activity observed in 4s honeypot containment window
 2026-10-20T19:48:06.200108,DEMO-PORT_SCANNING-975,Allow,info,Honeypot feedback: Allow - no malicious activity observed in 4s honeypot containment window
 2026-10-20T19:48:53.227535,DEMO-PORT_SCANNING-981,Allow,info,Honeypot feedback: Allow - no malicious activity observed in 4s honeypot containment window
+2026-10-26T14:01:47.559495,DEMO-PORT_SCANNING-003,Allow,info,Honeypot feedback: Allow - no malicious activity observed in 4s honeypot containment window
+2026-10-26T14:18:22.143715,DEMO-PORT_SCANNING-003,Allow,info,Honeypot feedback: Allow - no malicious activity observed in 4s honeypot containment window
+2026-10-26T14:19:14.155004,DEMO-PORT_SCANNING-003,Allow,info,Honeypot feedback: Allow - no malicious activity observed in 4s honeypot containment window

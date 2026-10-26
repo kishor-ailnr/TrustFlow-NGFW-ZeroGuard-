@@ -183,7 +183,7 @@ export default function RiskGauge({ score = 0, size = 150 }) {
           y={CY + 22}
           textAnchor="middle"
           fill="var(--text-muted)"
-          fontFamily="var(--font-body)"
+          fontFamily="var(--font-ui)"
           fontSize="7"
           fontWeight="600"
           letterSpacing="0.8px"

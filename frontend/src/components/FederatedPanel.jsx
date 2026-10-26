@@ -15,7 +15,7 @@ const CustomTooltip = ({ active, payload, label }) => {
       border: '1px solid var(--border)',
       boxShadow: 'var(--shadow-sm)',
       borderRadius: 4, padding: '6px 10px', fontSize: 11,
-      fontFamily: "var(--font-body)"
+      fontFamily: "var(--font-ui)"
     }}>
       <div style={{ color: 'var(--text-muted)', marginBottom: 2 }}>Round {label}</div>
       <div style={{ color: 'var(--accent)', fontFamily: "var(--font-mono)", fontWeight: 700 }}>
