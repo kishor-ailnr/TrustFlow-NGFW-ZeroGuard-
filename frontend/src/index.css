@@ -29,18 +29,23 @@
   background: var(--text-muted);
 }
 
-/* ── Base Canvas ───────────────────────────────────────────────── */
+/* ── Base Canvas & Code Reset ──────────────────────────────────── */
 html, body, #root {
   height: 100%;
   width: 100%;
   background-color: var(--bg-app);
   color: var(--text-primary);
-  font-family: var(--font-body);
-  font-size: 13px;
-  line-height: 1.4;
+  font-family: var(--font-ui);
+  font-size: var(--text-base, 13px);
+  line-height: var(--leading-normal, 1.5);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow: hidden;
+}
+
+code, kbd, samp, pre {
+  font-family: var(--font-mono);
+  font-size: 12px;
 }
 
 /* ── Clean flat canvas, no blobs, no decorative gradients ───────── */
@@ -170,38 +175,37 @@ html, body, #root {
 }
 
 .brand-title {
-  font-family: var(--font-body);
-  font-size: 15px;
-  font-weight: 800;
-  letter-spacing: 0.6px;
+  font-family: var(--font-ui);
+  font-size: 16px;
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.3px;
   color: var(--text-primary);
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
 }
 
 .brand-title .gold {
   color: var(--gold);
-  
 }
 
 .sub-badge {
   font-family: var(--font-mono);
-  font-size: 8.5px;
-  font-weight: 800;
-  letter-spacing: 0.8px;
+  font-size: 9px;
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.5px;
   color: #FFFFFF;
   background: var(--accent);
-  padding: 1px 4px;
+  padding: 1px 5px;
   border-radius: 2px;
 }
 
 .topbar-brand .sub {
-  font-family: var(--font-body);
-  font-size: 9px;
-  font-weight: 700;
+  font-family: var(--font-ui);
+  font-size: 9.5px;
+  font-weight: var(--weight-semibold);
   color: var(--text-secondary);
-  letter-spacing: 1.5px;
+  letter-spacing: 1px;
   text-transform: uppercase;
 }
 
@@ -210,7 +214,7 @@ html, body, #root {
   align-items: center;
   gap: 14px;
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 11.5px;
   color: var(--text-secondary);
 }
 
@@ -263,8 +267,9 @@ html, body, #root {
 }
 
 .ws-label {
+  font-family: var(--font-ui);
   font-size: 11px;
-  font-weight: 700;
+  font-weight: var(--weight-semibold);
   color: var(--text-primary);
 }
 
@@ -282,14 +287,15 @@ html, body, #root {
 .odometer-number {
   font-family: var(--font-mono);
   font-size: 13px;
-  font-weight: 700;
+  font-weight: var(--weight-bold);
   color: var(--text-primary);
 }
 
 .counter-label {
+  font-family: var(--font-ui);
   font-size: 11px;
   color: var(--text-secondary);
-  font-weight: 600;
+  font-weight: var(--weight-medium);
 }
 
 .theme-toggle-pill {
@@ -301,9 +307,9 @@ html, body, #root {
   border-radius: 14px;
   border: 1px solid var(--border-strong);
   color: var(--text-secondary);
-  font-family: var(--font-mono);
+  font-family: var(--font-ui);
   font-size: 11px;
-  font-weight: 600;
+  font-weight: var(--weight-semibold);
   cursor: pointer;
   transition: all 0.15s ease;
 }
@@ -378,24 +384,24 @@ html, body, #root {
 }
 
 .panel-title {
-  font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 800;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: var(--weight-bold);
   text-transform: uppercase;
-  letter-spacing: 1.2px;
+  letter-spacing: 0.6px;
   color: var(--text-primary);
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
 }
 
 .panel-badge {
   font-family: var(--font-mono);
-  font-size: 10px;
-  font-weight: 700;
+  font-size: 11px;
+  font-weight: var(--weight-medium);
   color: var(--text-secondary);
   background: var(--surface-raised);
-  padding: 1px 7px;
+  padding: 2px 8px;
   border-radius: 10px;
   border: 1px solid var(--border-strong);
 }
@@ -497,8 +503,8 @@ html, body, #root {
 
 .flow-id {
   font-family: var(--font-mono);
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 12.5px;
+  font-weight: var(--weight-medium);
   color: var(--text-primary);
   white-space: nowrap;
   overflow: hidden;
@@ -509,11 +515,11 @@ html, body, #root {
   background: transparent;
   border: 1px solid var(--accent);
   color: var(--accent);
-  font-size: 9.5px;
-  font-family: var(--font-mono);
-  font-weight: 700;
-  padding: 2px 6px;
-  border-radius: 3px;
+  font-size: 10.5px;
+  font-family: var(--font-ui);
+  font-weight: var(--weight-semibold);
+  padding: 2px 7px;
+  border-radius: var(--radius-xs);
   cursor: pointer;
   transition: all 0.15s ease;
 }
@@ -526,13 +532,14 @@ html, body, #root {
 
 .flow-meta {
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 11px;
+  line-height: 1.4;
   color: var(--text-secondary);
 }
 
-.flow-ip { color: var(--text-primary); font-weight: 600; }
-.flow-trust { color: var(--text-secondary); font-weight: 600; }
-.flow-time { color: var(--text-muted); }
+.flow-ip { color: var(--text-primary); font-weight: var(--weight-regular); }
+.flow-trust { color: var(--text-secondary); font-weight: var(--weight-medium); }
+.flow-time { color: var(--text-muted); font-weight: var(--weight-regular); }
 
 .flow-right {
   display: flex;
@@ -542,9 +549,9 @@ html, body, #root {
 }
 
 .flow-risk {
-  font-family: var(--font-display-serif);
-  font-size: 19px;
-  font-weight: 800;
+  font-family: var(--font-mono);
+  font-size: 18px;
+  font-weight: var(--weight-semibold);
   line-height: 1;
   letter-spacing: -0.5px;
 }
@@ -560,11 +567,11 @@ html, body, #root {
   align-items: center;
   padding: 2px 7px;
   border-radius: 10px;
-  font-family: var(--font-body);
-  font-size: 8.5px;
-  font-weight: 800;
+  font-family: var(--font-ui);
+  font-size: 10px;
+  font-weight: var(--weight-bold);
   text-transform: uppercase;
-  letter-spacing: 0.6px;
+  letter-spacing: 0.5px;
   animation: pillFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
@@ -650,19 +657,20 @@ html, body, #root {
 .model-bar-label {
   display: flex;
   justify-content: space-between;
-  font-size: 11px;
-  font-family: var(--font-body);
+  font-size: 12px;
+  font-family: var(--font-ui);
 }
 
 .model-name {
   color: var(--text-primary);
-  font-weight: 700;
+  font-weight: var(--weight-semibold);
 }
 
 .model-val {
   font-family: var(--font-mono);
   color: var(--gold);
-  font-weight: 800;
+  font-size: 12.5px;
+  font-weight: var(--weight-semibold);
 }
 
 .bar-track {
@@ -699,26 +707,27 @@ html, body, #root {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 11px;
+  font-family: var(--font-ui);
+  font-size: 12px;
 }
 
 .shap-driver-label {
   color: var(--text-secondary);
-  font-weight: 600;
+  font-weight: var(--weight-medium);
 }
 
 .shap-driver-name {
   color: var(--text-primary);
-  font-weight: 800;
+  font-weight: var(--weight-bold);
 }
 
 .inspect-detail-btn {
   background: transparent;
   border: 1px solid var(--accent);
   color: var(--accent);
-  font-family: var(--font-body);
-  font-size: 10.5px;
-  font-weight: 800;
+  font-family: var(--font-ui);
+  font-size: 11.5px;
+  font-weight: var(--weight-semibold);
   padding: 4px 10px;
   border-radius: var(--radius-xs);
   cursor: pointer;
@@ -753,9 +762,9 @@ html, body, #root {
 }
 
 .trust-number {
-  font-family: var(--font-display-serif);
-  font-size: 38px;
-  font-weight: 700;
+  font-family: var(--font-ui);
+  font-size: 44px;
+  font-weight: var(--weight-extrabold);
   letter-spacing: -1px;
   line-height: 1;
   display: inline-block;
@@ -774,16 +783,17 @@ html, body, #root {
 }
 
 .trust-band-label {
-  font-size: 11px;
+  font-family: var(--font-ui);
+  font-size: 13px;
   color: var(--text-primary);
-  font-family: var(--font-body);
-  font-weight: 700;
+  font-weight: var(--weight-semibold);
 }
 
 .trust-hint {
-  font-size: 10.5px;
+  font-family: var(--font-ui);
+  font-size: 12px;
   color: var(--text-primary);
-  line-height: 1.4;
+  line-height: 1.5;
 }
 
 .toggles-grid {
@@ -803,10 +813,10 @@ html, body, #root {
 }
 
 .toggle-label {
-  font-family: var(--font-body);
-  font-size: 10px;
+  font-family: var(--font-ui);
+  font-size: 12px;
   color: var(--text-primary);
-  font-weight: 700;
+  font-weight: var(--weight-medium);
 }
 
 .toggle-switch {
@@ -857,11 +867,11 @@ html, body, #root {
   color: #FFFFFF;
   border: 1px solid var(--accent);
   border-radius: var(--radius-sm);
-  font-family: var(--font-body);
-  font-size: 11.5px;
-  font-weight: 800;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: var(--weight-bold);
   cursor: pointer;
-  letter-spacing: 0.4px;
+  letter-spacing: 0.3px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -915,18 +925,19 @@ html, body, #root {
 }
 
 .miti-action-label {
-  font-family: var(--font-body);
-  font-size: 18px;
-  font-weight: 800;
-  letter-spacing: 0.4px;
+  font-family: var(--font-ui);
+  font-size: 20px;
+  font-weight: var(--weight-extrabold);
+  letter-spacing: 0.2px;
   line-height: 1.1;
 }
 
 .miti-reason {
-  font-size: 10.5px;
+  font-family: var(--font-ui);
+  font-size: 12.5px;
   color: var(--text-primary);
-  font-weight: 600;
-  line-height: 1.3;
+  font-weight: var(--weight-medium);
+  line-height: 1.4;
 }
 
 .miti-details {
@@ -944,7 +955,8 @@ html, body, #root {
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   padding: 7px 10px;
-  font-size: 10.5px;
+  font-family: var(--font-ui);
+  font-size: 12px;
   line-height: 1.5;
 }
 
@@ -1197,9 +1209,9 @@ html, body, #root {
 /* ── Adversarial Tests (Panel 6) ───────────────────────────────── */
 .redteam-summary {
   padding: 6px 10px;
-  font-family: var(--font-body);
-  font-size: 10.5px;
-  font-weight: 700;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: var(--weight-semibold);
   border-bottom: 1px solid var(--border);
   color: var(--text-primary);
   background: var(--surface-header);
@@ -1222,18 +1234,19 @@ html, body, #root {
 }
 
 .redteam-stat-num {
-  font-family: var(--font-display-serif);
-  font-size: 18px;
-  font-weight: 800;
+  font-family: var(--font-mono);
+  font-size: 20px;
+  font-weight: var(--weight-bold);
   line-height: 1;
 }
 
 .redteam-stat-label {
-  font-size: 8px;
+  font-family: var(--font-ui);
+  font-size: 10px;
   color: var(--text-secondary);
   text-transform: uppercase;
-  letter-spacing: 0.6px;
-  font-weight: 700;
+  letter-spacing: 0.5px;
+  font-weight: var(--weight-bold);
 }
 
 .redteam-table-wrap {
@@ -1245,19 +1258,19 @@ html, body, #root {
 .redteam-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 10px;
+  font-size: 11px;
 }
 
 .redteam-table th {
   text-align: left;
   color: var(--text-secondary);
-  font-family: var(--font-body);
-  font-weight: 700;
-  padding: 4px 10px;
+  font-family: var(--font-ui);
+  font-weight: var(--weight-bold);
+  padding: 5px 10px;
   border-bottom: 1px solid var(--border);
   text-transform: uppercase;
-  font-size: 8px;
-  letter-spacing: 0.8px;
+  font-size: 9.5px;
+  letter-spacing: 0.6px;
   background: var(--surface-header);
   position: sticky;
   top: 0;
@@ -1265,10 +1278,11 @@ html, body, #root {
 }
 
 .redteam-table td {
-  padding: 4px 10px;
+  padding: 5px 10px;
   border-bottom: 1px solid var(--border);
   color: var(--text-secondary);
-  font-family: var(--font-body);
+  font-family: var(--font-ui);
+  font-size: 11.5px;
 }
 
 .clickable-row {
@@ -1282,8 +1296,9 @@ html, body, #root {
 
 .cell-flow-id {
   font-family: var(--font-mono) !important;
-  color: #FFFFFF !important;
-  font-weight: 700;
+  color: var(--text-primary) !important;
+  font-weight: var(--weight-medium);
+  font-size: 11.5px;
 }
 
 .evaded {
@@ -1365,9 +1380,9 @@ html, body, #root {
   background: transparent;
   border: 1px solid var(--accent);
   color: var(--accent);
-  font-family: var(--font-body);
-  font-size: 11.5px;
-  font-weight: 800;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: var(--weight-bold);
   padding: 5px 12px;
   border-radius: var(--radius-sm);
   cursor: pointer;
@@ -1394,13 +1409,13 @@ html, body, #root {
   align-items: center;
   gap: 6px;
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 11.5px;
 }
 
 .bc-root { color: var(--text-secondary); }
 .bc-sep { color: var(--text-muted); }
 .bc-module { color: var(--text-secondary); }
-.bc-id { color: var(--accent); font-weight: 700; }
+.bc-id { color: var(--accent); font-weight: var(--weight-semibold); }
 
 .nav-right {
   display: flex;
@@ -1416,8 +1431,8 @@ html, body, #root {
   border: 1px solid var(--allow-text);
   color: var(--allow-text);
   font-family: var(--font-mono);
-  font-size: 10.5px;
-  font-weight: 700;
+  font-size: 11px;
+  font-weight: var(--weight-semibold);
   padding: 3px 8px;
   border-radius: 12px;
 }
@@ -1476,18 +1491,18 @@ html, body, #root {
 
 .hero-id-label {
   font-family: var(--font-mono);
-  font-size: 9.5px;
-  letter-spacing: 1.2px;
+  font-size: 10px;
+  letter-spacing: 1px;
   color: var(--accent);
-  font-weight: 800;
+  font-weight: var(--weight-bold);
 }
 
 .diagnosis-pill {
-  font-family: var(--font-body);
-  font-size: 9.5px;
-  font-weight: 800;
+  font-family: var(--font-ui);
+  font-size: 10.5px;
+  font-weight: var(--weight-bold);
   text-transform: uppercase;
-  letter-spacing: 0.6px;
+  letter-spacing: 0.5px;
   padding: 2px 8px;
   border-radius: 12px;
 }
@@ -1519,7 +1534,7 @@ html, body, #root {
 .hero-flow-id {
   font-family: var(--font-mono);
   font-size: 22px;
-  font-weight: 800;
+  font-weight: var(--weight-bold);
   color: var(--text-primary);
   letter-spacing: 0.5px;
 }
@@ -1533,7 +1548,7 @@ html, body, #root {
 
 .hero-meta-badge {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 11.5px;
   background: var(--surface-raised);
   padding: 3px 8px;
   border-radius: 4px;
@@ -1543,7 +1558,7 @@ html, body, #root {
 }
 
 .meta-k { color: var(--text-secondary); }
-.meta-v { color: var(--text-primary); font-weight: 700; }
+.meta-v { color: var(--text-primary); font-weight: var(--weight-semibold); }
 
 .hero-metrics {
   display: flex;
@@ -1564,31 +1579,32 @@ html, body, #root {
 }
 
 .metric-k {
-  font-family: var(--font-body);
-  font-size: 9px;
-  font-weight: 800;
-  letter-spacing: 1px;
+  font-family: var(--font-ui);
+  font-size: 10px;
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.8px;
   color: var(--text-secondary);
+  text-transform: uppercase;
 }
 
 .detail-action-badge {
-  font-family: var(--font-body);
+  font-family: var(--font-ui);
   font-size: 18px;
-  font-weight: 800;
+  font-weight: var(--weight-extrabold);
   line-height: 1.1;
 }
 
 .metric-hero-num {
-  font-family: var(--font-display-serif);
+  font-family: var(--font-ui);
   font-size: 24px;
-  font-weight: 800;
+  font-weight: var(--weight-extrabold);
   line-height: 1.1;
 }
 
 .metric-denom {
   font-size: 12px;
   color: var(--text-secondary);
-  font-family: var(--font-body);
+  font-family: var(--font-ui);
 }
 
 .metric-sub {
@@ -1621,10 +1637,10 @@ html, body, #root {
 }
 
 .diag-title {
-  font-family: var(--font-body);
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 0.6px;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.5px;
   color: var(--text-primary);
   text-transform: uppercase;
 }
@@ -1647,16 +1663,16 @@ html, body, #root {
 
 .diag-label {
   font-family: var(--font-mono);
-  font-size: 9.5px;
-  font-weight: 800;
-  letter-spacing: 0.8px;
+  font-size: 10px;
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.6px;
   color: var(--accent);
 }
 
 .diag-text {
-  font-family: var(--font-body);
-  font-size: 11.5px;
-  line-height: 1.45;
+  font-family: var(--font-ui);
+  font-size: 12.5px;
+  line-height: 1.5;
   color: var(--text-primary);
 }
 
@@ -1674,9 +1690,9 @@ html, body, #root {
   border: 1px solid var(--border);
   border-bottom: none;
   color: var(--text-secondary);
-  font-family: var(--font-body);
-  font-size: 12px;
-  font-weight: 700;
+  font-family: var(--font-ui);
+  font-size: 12.5px;
+  font-weight: var(--weight-semibold);
   padding: 8px 16px;
   border-radius: 4px 4px 0 0;
   cursor: pointer;
@@ -1791,32 +1807,33 @@ html, body, #root {
 
 .dh-label {
   font-family: var(--font-mono);
-  font-size: 9.5px;
+  font-size: 10px;
   letter-spacing: 1px;
   color: var(--accent);
-  font-weight: 700;
+  font-weight: var(--weight-bold);
 }
 
 .dh-title {
-  font-family: var(--font-body);
+  font-family: var(--font-ui);
   font-size: 15px;
   color: var(--text-primary);
   margin: 2px 0 4px;
-  font-weight: 800;
+  font-weight: var(--weight-bold);
 }
 
 .dh-desc {
-  font-size: 11px;
-  color: #CAD0DB;
-  line-height: 1.4;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.5;
 }
 
 .shap-meta-header {
-  font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 800;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: var(--weight-bold);
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.8px;
   color: var(--text-primary);
 }
 
@@ -1839,9 +1856,11 @@ html, body, #root {
   background: var(--surface-header);
   border-bottom: 1px solid var(--border);
   color: var(--text-secondary);
-  font-size: 9.5px;
+  font-family: var(--font-ui);
+  font-size: 10px;
+  font-weight: var(--weight-bold);
   text-transform: uppercase;
-  letter-spacing: 0.8px;
+  letter-spacing: 0.6px;
 }
 
 .shap-contrib-table td {
@@ -1942,12 +1961,12 @@ html, body, #root {
 }
 
 .fcat-title {
-  font-family: var(--font-body);
-  font-size: 11.5px;
-  font-weight: 700;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: var(--weight-bold);
   color: var(--accent);
   text-transform: uppercase;
-  letter-spacing: 0.8px;
+  letter-spacing: 0.6px;
   margin-bottom: 8px;
   padding-bottom: 4px;
   border-bottom: 1px solid var(--border);
@@ -2090,27 +2109,30 @@ html, body, #root {
 }
 
 .brand-main {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 16px;
-  font-weight: 800;
+  font-family: var(--font-ui);
+  font-size: 22px;
+  font-weight: var(--weight-extrabold);
   letter-spacing: 1.5px;
   color: var(--text-primary);
 }
 
 .brand-tag {
-  font-size: 9px;
-  font-weight: 700;
+  font-family: var(--font-ui);
+  font-size: 9.5px;
+  font-weight: var(--weight-bold);
   letter-spacing: 1px;
-  color: #94A3B8;
+  color: var(--text-secondary);
 }
 
 .sidebar-section-title {
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 1.5px;
-  color: #64748B;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: var(--weight-bold);
+  letter-spacing: 1px;
+  color: var(--text-secondary);
   margin-bottom: 10px;
   padding-left: 6px;
+  text-transform: uppercase;
 }
 
 .sidebar-nav-section {
@@ -2171,18 +2193,23 @@ html, body, #root {
 }
 
 .nav-title {
-  font-size: 13px;
-  font-weight: 700;
+  font-family: var(--font-ui);
+  font-size: 15px;
+  font-weight: var(--weight-semibold);
   color: inherit;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  line-height: 1.3;
 }
 
 .nav-subtitle {
-  font-size: 10px;
-  color: #64748B;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: var(--weight-regular);
+  color: var(--text-secondary);
   margin-top: 2px;
+  line-height: 1.4;
 }
 
 .sidebar-nav-item.active .nav-subtitle {
@@ -2190,8 +2217,9 @@ html, body, #root {
 }
 
 .nav-badge {
-  font-size: 9.5px;
-  font-weight: 800;
+  font-family: var(--font-ui);
+  font-size: 10.5px;
+  font-weight: var(--weight-bold);
   padding: 2px 7px;
   border-radius: 12px;
   text-transform: uppercase;
@@ -2250,15 +2278,19 @@ html, body, #root {
 }
 
 .status-label {
+  font-family: var(--font-ui);
   font-size: 10px;
-  font-weight: 700;
-  color: #94A3B8;
+  font-weight: var(--weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
 }
 
 .status-value {
-  font-size: 10.5px;
-  font-weight: 600;
-  color: #E2E8F0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: var(--weight-medium);
+  color: var(--text-primary);
 }
 
 .sidebar-footer {
@@ -2289,9 +2321,9 @@ html, body, #root {
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-sm);
   color: var(--text-secondary);
-  font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 600;
+  font-family: var(--font-ui);
+  font-size: 11.5px;
+  font-weight: var(--weight-semibold);
   cursor: pointer;
   transition: all 0.15s ease;
 }
@@ -2356,16 +2388,17 @@ html, body, #root {
 }
 
 .banner-title {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 19px;
-  font-weight: 800;
+  font-family: var(--font-ui);
+  font-size: 21px;
+  font-weight: var(--weight-bold);
   color: var(--text-primary);
-  letter-spacing: 0.5px;
+  letter-spacing: 0.2px;
 }
 
 .banner-subtitle {
-  font-size: 12.5px;
-  color: #94A3B8;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  color: var(--text-secondary);
   margin-top: 4px;
   line-height: 1.5;
   max-width: 1200px;
@@ -2391,9 +2424,10 @@ html, body, #root {
 }
 
 .control-label {
+  font-family: var(--font-ui);
   font-size: 11px;
-  font-weight: 700;
-  color: #94A3B8;
+  font-weight: var(--weight-semibold);
+  color: var(--text-secondary);
   letter-spacing: 0.5px;
   text-transform: uppercase;
 }
@@ -2408,11 +2442,12 @@ html, body, #root {
 
 .toggle-btn {
   padding: 8px 16px;
+  font-family: var(--font-ui);
   font-size: 12px;
-  font-weight: 700;
+  font-weight: var(--weight-semibold);
   border: none;
   background: transparent;
-  color: #94A3B8;
+  color: var(--text-secondary);
   border-radius: 4px;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -2430,8 +2465,8 @@ html, body, #root {
   color: var(--text-primary);
   padding: 8px 14px;
   border-radius: 6px;
-  font-size: 13px;
-  font-family: inherit;
+  font-size: 12.5px;
+  font-family: var(--font-mono);
   outline: none;
 }
 
@@ -2446,8 +2481,9 @@ html, body, #root {
   gap: 8px;
   background: var(--accent);
   color: #FFFFFF;
-  font-size: 13px;
-  font-weight: 800;
+  font-family: var(--font-ui);
+  font-size: 13.5px;
+  font-weight: var(--weight-bold);
   padding: 10px 22px;
   border: none;
   border-radius: 6px;
@@ -2465,8 +2501,9 @@ html, body, #root {
   background: transparent;
   color: var(--accent);
   border: 1px solid var(--accent);
-  font-size: 11.5px;
-  font-weight: 700;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: var(--weight-semibold);
   padding: 6px 14px;
   border-radius: 4px;
   cursor: pointer;
@@ -2499,26 +2536,27 @@ html, body, #root {
 }
 
 .preview-doc-title {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: var(--font-ui);
   font-size: 18px;
-  font-weight: 800;
-  letter-spacing: 1px;
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.3px;
   color: var(--text-primary);
 }
 
 .preview-doc-meta {
   display: flex;
   gap: 18px;
+  font-family: var(--font-mono);
   font-size: 11.5px;
-  color: #94A3B8;
+  color: var(--text-secondary);
   margin-top: 6px;
   flex-wrap: wrap;
 }
 
 .preview-brand-tag {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: var(--font-ui);
   font-size: 18px;
-  font-weight: 800;
+  font-weight: var(--weight-extrabold);
   color: var(--text-primary);
 }
 
@@ -2555,10 +2593,10 @@ html, body, #root {
 .report-kpi-card.info { border-color: var(--border); background: var(--surface-raised); }
 .report-kpi-card.success { border-color: var(--border); background: var(--allow-bg); }
 
-.kpi-label { font-size: 10.5px; font-weight: 700; color: #94A3B8; text-transform: uppercase; }
-.kpi-value { font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 800; color: var(--text-primary); }
-.kpi-unit { font-size: 14px; color: #94A3B8; font-weight: 600; }
-.kpi-sub { font-size: 10px; color: #64748B; }
+.kpi-label { font-family: var(--font-ui); font-size: 11px; font-weight: var(--weight-semibold); color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
+.kpi-value { font-family: var(--font-ui); font-size: 26px; font-weight: var(--weight-extrabold); color: var(--text-primary); }
+.kpi-unit { font-family: var(--font-ui); font-size: 14px; color: var(--text-secondary); font-weight: var(--weight-semibold); }
+.kpi-sub { font-family: var(--font-ui); font-size: 11px; color: var(--text-secondary); }
 
 /* ── Report Sections & Tables ─────────────────────────────────── */
 .report-section {
@@ -2568,11 +2606,11 @@ html, body, #root {
 }
 
 .section-heading {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 14px;
-  font-weight: 800;
+  font-family: var(--font-ui);
+  font-size: 15px;
+  font-weight: var(--weight-bold);
   color: var(--text-primary);
-  letter-spacing: 0.5px;
+  letter-spacing: 0.4px;
   text-transform: uppercase;
 }
 
@@ -2732,9 +2770,9 @@ html, body, #root {
 .adv-card.info { border-color: var(--border); background: var(--surface-raised); }
 .adv-card.gold { border-color: var(--border); background: var(--surface-raised); }
 
-.adv-card-label { font-size: 11px; font-weight: 700; color: #94A3B8; text-transform: uppercase; }
-.adv-card-value { font-family: 'Space Grotesk', sans-serif; font-size: 26px; font-weight: 800; color: var(--text-primary); margin: 4px 0; }
-.adv-card-sub { font-size: 10.5px; color: #64748B; }
+.adv-card-label { font-family: var(--font-ui); font-size: 11px; font-weight: var(--weight-semibold); color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
+.adv-card-value { font-family: var(--font-ui); font-size: 26px; font-weight: var(--weight-extrabold); color: var(--text-primary); margin: 4px 0; }
+.adv-card-sub { font-family: var(--font-ui); font-size: 11px; color: var(--text-secondary); }
 
 .adv-main-card {
   background: var(--surface);
@@ -2751,21 +2789,25 @@ html, body, #root {
 }
 
 .card-title {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 16px;
-  font-weight: 800;
+  font-family: var(--font-ui);
+  font-size: 15px;
+  font-weight: var(--weight-bold);
   color: var(--text-primary);
+  letter-spacing: 0.2px;
 }
 
 .card-desc {
-  font-size: 12px;
-  color: #94A3B8;
+  font-family: var(--font-ui);
+  font-size: 12.5px;
+  color: var(--text-secondary);
   margin-top: 3px;
+  font-weight: var(--weight-regular);
 }
 
 .card-tag {
-  font-size: 10.5px;
-  font-weight: 800;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: var(--weight-bold);
   padding: 3px 10px;
   border-radius: 20px;
 }
@@ -2788,7 +2830,10 @@ html, body, #root {
   padding: 10px 12px;
   background: var(--surface-header);
   color: var(--text-secondary);
-  font-weight: 700;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.4px;
   border-bottom: 1px solid var(--border);
 }
 
@@ -2796,6 +2841,14 @@ html, body, #root {
   padding: 10px 12px;
   border-bottom: 1px solid var(--border);
   color: var(--text-primary);
+  font-family: var(--font-ui);
+  font-size: 12.5px;
+}
+
+.td-mono,
+.adv-table td.td-mono {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
 }
 
 .adv-row:hover {
@@ -2803,7 +2856,9 @@ html, body, #root {
 }
 
 .method-pill {
-  font-size: 10.5px;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: var(--weight-medium);
   padding: 2px 7px;
   border-radius: 4px;
   background: var(--surface-raised);
@@ -2813,19 +2868,22 @@ html, body, #root {
 
 .status-detected {
   color: var(--allow-text);
-  font-weight: 700;
-  font-size: 11px;
+  font-family: var(--font-ui);
+  font-weight: var(--weight-bold);
+  font-size: 11.5px;
 }
 
 .status-evaded {
   color: var(--block-text);
-  font-weight: 700;
-  font-size: 11px;
+  font-family: var(--font-ui);
+  font-weight: var(--weight-bold);
+  font-size: 11.5px;
 }
 
 .severity-badge {
-  font-size: 9.5px;
-  font-weight: 800;
+  font-family: var(--font-ui);
+  font-size: 10px;
+  font-weight: var(--weight-bold);
   padding: 2px 6px;
   border-radius: 4px;
   text-transform: uppercase;
@@ -2835,8 +2893,10 @@ html, body, #root {
 .severity-badge.info { background: rgba(56, 189, 248, 0.2); color: #38BDF8; border: 1px solid rgba(56, 189, 248, 0.4); }
 
 .log-msg-cell {
-  font-size: 11.5px;
-  color: #CBD5E1;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-secondary);
   max-width: 480px;
 }
 
@@ -2844,8 +2904,9 @@ html, body, #root {
   background: transparent;
   border: 1px solid var(--accent);
   color: var(--accent);
-  font-size: 11px;
-  font-weight: 700;
+  font-family: var(--font-ui);
+  font-size: 11.5px;
+  font-weight: var(--weight-semibold);
   padding: 4px 10px;
   border-radius: 4px;
   cursor: pointer;
@@ -2865,15 +2926,17 @@ html, body, #root {
 }
 
 .strategy-title {
-  font-size: 13.5px;
-  font-weight: 800;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: var(--weight-bold);
   color: var(--text-primary);
   margin-bottom: 6px;
 }
 
 .strategy-text {
-  font-size: 12px;
-  color: #94A3B8;
+  font-family: var(--font-ui);
+  font-size: 12.5px;
+  color: var(--text-secondary);
   line-height: 1.6;
 }
 
